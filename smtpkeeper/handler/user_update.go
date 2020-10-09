@@ -24,8 +24,8 @@ func NewUpdateUserHandler(repo db.UserRepository) http.HandlerFunc {
 			return
 		}
 
-		// Email is our primary key, make sure it is same in the passed data as in query string
-		user.Email = httprouter.GetParam(r, "email")
+		// Login is our primary key, make sure it is same in the passed data as in query string
+		user.Login = httprouter.GetParam(r, "login")
 
 		// todo: data validation
 

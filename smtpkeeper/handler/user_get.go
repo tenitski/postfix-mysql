@@ -14,9 +14,9 @@ func NewGetUserHandler(repo db.UserRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Debugf("Processing request %s %s", r.Method, r.URL.Path)
 
-		email := httprouter.GetParam(r, "email")
+		login := httprouter.GetParam(r, "login")
 
-		user, err := repo.Get(email)
+		user, err := repo.Get(login)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				respondWithStatusCode(w, r, http.StatusNotFound)

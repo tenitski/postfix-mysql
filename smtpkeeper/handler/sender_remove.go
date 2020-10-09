@@ -10,13 +10,16 @@ import (
 	"smtpkeeper/db"
 )
 
-func NewDeleteUserHandler(repo db.UserRepository) http.HandlerFunc {
+func NewRemoveSenderHandler(repo db.SenderRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Debugf("Processing request %s %s", r.Method, r.URL.Path)
 
 		login := httprouter.GetParam(r, "login")
+		sender := httprouter.GetParam(r, "sender")
 
-		err := repo.Delete(login)
+		// todo: 404 if no user?
+
+		err := repo.Remove(login, sender)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				respondWithStatusCode(w, r, http.StatusNotFound)

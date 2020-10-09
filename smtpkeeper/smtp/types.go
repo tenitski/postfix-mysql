@@ -1,14 +1,8 @@
 package smtp
 
 type User struct {
-	Email    string   `json:"email"`
+	Login    string   `json:"login"`
 	Password password `json:"password"`
-}
-
-type Sender struct {
-	//ID   string `json:"id"`
-	User string `json:"string"`
-	From string `json:"from"`
 }
 
 type password string

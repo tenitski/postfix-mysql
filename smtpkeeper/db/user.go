@@ -9,11 +9,11 @@ import (
 )
 
 type UserRepository interface {
-	Get(email string) (*smtp.User, error)
+	Get(login string) (*smtp.User, error)
 	GetAll() ([]smtp.User, error)
 	Create(user smtp.User) error
 	Update(user smtp.User) error
-	Delete(email string) error
+	Delete(login string) error
 }
 
 type userRepository struct {
@@ -24,9 +24,9 @@ func NewUserRepository(db *sqlx.DB) UserRepository {
 	return &userRepository{db: db}
 }
 
-func (r userRepository) Get(email string) (*smtp.User, error) {
+func (r userRepository) Get(login string) (*smtp.User, error) {
 	var user smtp.User
-	err := r.db.Get(&user, "SELECT * FROM user WHERE email = ?", email)
+	err := r.db.Get(&user, "SELECT * FROM user WHERE login = ?", login)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (r userRepository) Get(email string) (*smtp.User, error) {
 
 func (r userRepository) GetAll() ([]smtp.User, error) {
 	var users []smtp.User
-	err := r.db.Select(&users, "SELECT * FROM user ORDER BY email")
+	err := r.db.Select(&users, "SELECT * FROM user ORDER BY login")
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (r userRepository) GetAll() ([]smtp.User, error) {
 }
 
 func (r userRepository) Create(user smtp.User) error {
-	_, err := r.db.Exec("INSERT INTO user (email, password) VALUES (?, ?)", user.Email, user.Password)
+	_, err := r.db.Exec("INSERT INTO user (login, password) VALUES (?, ?)", user.Login, user.Password)
 
 	return err
 }
@@ -59,13 +59,13 @@ func (r userRepository) Update(user smtp.User) error {
 
 	// Make sure user exists
 	var v string
-	err = r.db.Get(&v, "SELECT email FROM user WHERE email = ?", user.Email)
+	err = r.db.Get(&v, "SELECT login FROM user WHERE login = ?", user.Login)
 	if err != nil {
 		return err
 	}
 
 	// Update user
-	_, err = tx.Exec("UPDATE user SET password = ? WHERE email = ?", user.Password, user.Email)
+	_, err = tx.Exec("UPDATE user SET password = ? WHERE login = ?", user.Password, user.Login)
 	if err != nil {
 		return err
 	}
@@ -73,8 +73,8 @@ func (r userRepository) Update(user smtp.User) error {
 	return tx.Commit()
 }
 
-func (r userRepository) Delete(email string) error {
-	result, err := r.db.Exec("DELETE FROM user WHERE email = ?", email)
+func (r userRepository) Delete(login string) error {
+	result, err := r.db.Exec("DELETE FROM user WHERE login = ?", login)
 	if err != nil {
 		return err
 	}

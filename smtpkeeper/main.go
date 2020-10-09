@@ -35,17 +35,23 @@ func main() {
 	}
 
 	userRepo := db.NewUserRepository(conn)
+	senderRepo := db.NewSenderRepository(conn)
 
 	// Configure routes
 	router := httprouter.New()
-	router.GET("/user/:email", handler.NewGetUserHandler(userRepo))
+	// Users
+	router.GET("/user/:login", handler.NewGetUserHandler(userRepo))
 	router.GET("/users", handler.NewGetUsersHandler(userRepo))
 	router.POST("/users", handler.NewCreateUserHandler(userRepo))
-	router.PUT("/user/:email", handler.NewUpdateUserHandler(userRepo))
-	router.DELETE("/user/:email", handler.NewDeleteUserHandler(userRepo))
+	router.PUT("/user/:login", handler.NewUpdateUserHandler(userRepo))
+	router.DELETE("/user/:login", handler.NewDeleteUserHandler(userRepo))
+	// Senders
+	router.GET("/user/:login/senders", handler.NewGetSendersHandler(senderRepo))
+	router.POST("/user/:login/senders", handler.NewAddSenderHandler(senderRepo))
+	router.DELETE("/user/:login/sender/:sender", handler.NewRemoveSenderHandler(senderRepo))
 
 	// Start server
-	addr := ":18080"
+	addr := ":8080"
 	log.WithField("addr", addr).Info("Starting server")
 	log.Fatal(http.ListenAndServe(addr, router))
 }
