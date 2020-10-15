@@ -1,0 +1,44 @@
+version: "2.2"
+
+services:
+  mysql:
+    image: mysql:5.6
+    environment:
+      MYSQL_USER: mail
+      MYSQL_PASSWORD: mail
+      MYSQL_DATABASE: mail
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    healthcheck:
+      test: "mysql -h 127.0.0.1 --connect-timeout=5 --user=mail --password=mail -e 'SELECT 1'"
+      interval: 10s
+      timeout: 60s
+      retries: 5
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "33066:3306"
+
+  postfix:
+    build:
+      context: .
+    ports:
+      - "25252:25"
+    depends_on:
+      mysql:
+         condition: service_healthy
+
+  smtpkeeper:
+    build:
+      context: smtpkeeper/
+    depends_on:
+      mysql:
+         condition: service_healthy
+    environment:
+      LOG_LEVEL: debug
+    ports:
+      - "8080:8080"
+    command: "mail:mail@(mysql:3306)/mail"
+
+volumes:
+  mysql-data:
+    driver: local

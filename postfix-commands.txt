@@ -1,0 +1,101 @@
+telnet 127.0.0.1 25252
+
+# mailer@example.com
+
+# base64 encode username & password
+echo -n 'mailer@example.com' | openssl base64 | pbcopy
+bWFpbGVyQGV4YW1wbGUuY29t
+echo -n 'password1' | openssl base64 | pbcopy
+cGFzc3dvcmQx
+
+# login to the server
+EHLO example.com
+AUTH LOGIN
+bWFpbGVyQGV4YW1wbGUuY29t
+cGFzc3dvcmQx
+
+
+# mailer@example.net
+
+# base64 encode username & password
+echo -n 'mailer@example.net' | openssl base64 | pbcopy
+bWFpbGVyQGV4YW1wbGUubmV0
+echo -n 'password2' | openssl base64 | pbcopy
+cGFzc3dvcmQy
+
+# login to the server
+EHLO example.net
+AUTH LOGIN
+bWFpbGVyQGV4YW1wbGUubmV0
+cGFzc3dvcmQy
+
+
+# mailer@example.org
+
+# base64 encode username & password
+echo -n 'mailer@example.org' | openssl base64 | pbcopy
+bWFpbGVyQGV4YW1wbGUub3Jn
+echo -n 'password3' | openssl base64 | pbcopy
+cGFzc3dvcmQz
+
+# login to the server
+EHLO example.org
+AUTH LOGIN
+bWFpbGVyQGV4YW1wbGUub3Jn
+cGFzc3dvcmQz
+
+
+# Various test emails
+
+MAIL FROM: mailer@example.org
+RCPT TO: <REDACTED>
+DATA
+Subject: Sending an email using telnet
+
+Hello,
+
+Here is my body. Do you like it?
+
+Cheers
+.
+
+
+MAIL FROM: test@gmail.com
+RCPT TO: <REDACTED>
+DATA
+Subject: Sending an email using telnet
+
+Hello,
+
+Here is my body. Do you like it?
+
+Cheers
+.
+
+
+MAIL FROM: test2@example.com
+RCPT TO: <REDACTED>
+DATA
+Subject: Sending an email using telnet
+
+Hello,
+
+Here is my body. Do you like it?
+
+Cheers
+.
+
+MAIL FROM: test@mail2.example.net
+RCPT TO: <REDACTED>
+DATA
+Subject: Sending an email using telnet
+
+Hello,
+
+Here is my body. Do you like it?
+
+Cheers
+.
+
+
+quit
