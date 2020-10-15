@@ -1,3 +1,5 @@
+telnet 127.0.0.1 25252
+
 # mailer@example.com
 
 # base64 encode username & password
